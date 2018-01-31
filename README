@@ -1,0 +1,8 @@
+本project是对商品名进行一个序列标注，对于一个商品名中，核心的商品名词我们将其标注出来，核心词的第一个字标记为B-LOC,其他字标为I-LOC，商品名中非核心词标记为O
+
+训练时，讲train，test等数据集均放入data_path文件夹中，并在main.py中更改数据地址，进行训练
+
+参考文档：https://github.com/Determined22/zh-NER-TF
+
+
+
