@@ -12,11 +12,11 @@ def str2bool(v):
 
 
 def get_entity(tag_seq, char_seq):
-    #PER = get_PER_entity(tag_seq, char_seq)
+    PER = get_PER_entity(tag_seq, char_seq)
     LOC = get_LOC_entity(tag_seq, char_seq)
     # ORG = get_ORG_entity(tag_seq, char_seq)
     #return PER, LOC, ORG
-    return LOC
+    return LOC,PER
 
 def get_PER_entity(tag_seq, char_seq):
     length = len(char_seq)

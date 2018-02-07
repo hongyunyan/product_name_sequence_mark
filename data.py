@@ -1,15 +1,13 @@
 import sys, pickle, os, random
 import numpy as np
 
-## tags, BIO
+
+#修改需要标注的对应编号
 tag2label = {"O": 0,
              "B-LOC": 1, "I-LOC": 2,
+             "B-PER": 3, "I-PER": 4,
              }
-# tag2label = {"O": 0,
-#              "B-PER": 1, "I-PER": 2,
-#              "B-LOC": 3, "I-LOC": 4,
-#              "B-ORG": 5, "I-ORG": 6
-#              }
+
 
 
 def read_corpus(corpus_path):

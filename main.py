@@ -1,11 +1,16 @@
 import tensorflow as tf
+from time import time
 from model import BiLSTM_CRF
 import numpy as np
 import os, argparse, time, random
 from utils import str2bool, get_logger, get_entity
 from data import read_corpus, read_dictionary, tag2label, random_embedding
 
+
+start=time.time()
+
 ## hyperparameters
+
 parser = argparse.ArgumentParser(description='BiLSTM-CRF for Chinese NER task')
 parser.add_argument('--train_data', type=str, default='data_path', help='train data source')
 parser.add_argument('--test_data', type=str, default='data_path', help='test data source')
@@ -22,11 +27,12 @@ parser.add_argument('--pretrain_embedding', type=str, default='random', help='us
 parser.add_argument('--embedding_dim', type=int, default=300, help='random init char embedding_dim')
 parser.add_argument('--shuffle', type=str2bool, default=True, help='shuffle training data before each epoch')
 parser.add_argument('--mode', type=str, default='train', help='train/test/demo')
-parser.add_argument('--demo_model', type=str, default='1499785642', help='model for test and demo')
+parser.add_argument('--demo_model', type=str, default='1517901636', help='model for test and demo')
+parser.add_argument('--result_data', type=str, default='Bresult9', help='test data name')  #测试集名称
 args = parser.parse_args()
 
 ## get char embeddings
-word2id = read_dictionary(os.path.join('.', args.train_data, 'temp.pkl'))
+word2id = read_dictionary(os.path.join('.', args.train_data, 'word2id.pkl'))  #载入字与序号对应的字典
 if args.pretrain_embedding == 'random':
     embeddings = random_embedding(word2id, args.embedding_dim)
 else:
@@ -35,13 +41,14 @@ else:
 
 ## read corpus and get training data
 if args.mode != 'demo':
-    train_path = os.path.join('.', args.train_data, 'result1')
-    test_path = os.path.join('.', args.test_data, 'result8')
+    train_path = os.path.join('.', args.train_data, 'Bresult')#修改训练集文件名,选择不同训练集
+    test_path = os.path.join('.', args.test_data, 'Bresult8')#验证集名称
     train_data = read_corpus(train_path)
-    test_data = read_corpus(test_path); test_size = len(test_data)
+    test_data = read_corpus(test_path);
+    test_size = len(test_data)
 
-    #import the evaluate test 
-    test2_path = os.path.join('.', args.train_data, 'result9')
+    #import the evaluate test
+    test2_path = os.path.join('.', args.train_data, args.result_data)
     test2_data = read_corpus(test2_path)
     test2_size = len(test2_data)
 
@@ -117,5 +124,9 @@ elif args.mode == 'demo':
                 tag = model.demo_one(sess, demo_data)
                 # PER, LOC, ORG = get_entity(tag, demo_sent)
                 # print('PER: {}\nLOC: {}\nORG: {}'.format(PER, LOC, ORG))
-                LOC = get_entity(tag, demo_sent)
-                print('LOC: {}\n'.format( LOC))
+                LOC,PER = get_entity(tag, demo_sent)
+                print('LOC: {}\n''PER: {}\n'.format( LOC,PER))
+
+
+stop=time.time()
+print("process time",str(stop-start))
